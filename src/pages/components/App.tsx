@@ -1,23 +1,23 @@
 import { useEffect, useState } from 'react'
 export const App = (): JSX.Element => {
-  const [initialInvestment, setInitialInvestment] = useState(0)
+  const [initialInvestment, setInitialInvestment] = useState<string>('')
   const handleInitialInvestment = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInitialInvestment(Number(e.target.value))
+    setInitialInvestment(e.target.value)
   }
 
-  const [monthlyInvestment, setMonthlyInvestment] = useState(0)
+  const [monthlyInvestment, setMonthlyInvestment] = useState<string>('')
   const handleMonthlyInvestment = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMonthlyInvestment(Number(e.target.value))
+    setMonthlyInvestment(e.target.value)
   }
 
-  const [years, setYears] = useState(0)
-  const handleYears = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setYears(Number(e.target.value))
-  }
-
-  const [yields, setYields] = useState(0)
+  const [yields, setYields] = useState<string>('')
   const handleYields = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setYields(Number(e.target.value))
+    setYields(e.target.value)
+  }
+
+  const [years, setYears] = useState<string>('')
+  const handleYears = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setYears(e.target.value)
   }
 
   const [profit, setProfit] = useState(0)
@@ -25,13 +25,13 @@ export const App = (): JSX.Element => {
 
   const [totalAssets, setTotalAssets] = useState(0)
   useEffect(() => {
-    const yearlyInvestment = monthlyInvestment * 12
-    let total = initialInvestment
-    let reserve = initialInvestment
-    for (let index = 0; index < years; index++) {
+    const yearlyInvestment = Number(monthlyInvestment) * 12
+    let total = Number(initialInvestment)
+    let reserve = Number(initialInvestment)
+    for (let index = 0; index < Number(years); index++) {
       reserve += yearlyInvestment
       total += yearlyInvestment
-      total *= yields / 100 + 1
+      total *= Number(yields) / 100 + 1
     }
     const realTotalAssets = Math.floor(total * 10000)
     setTotalReserves(reserve * 10000)
@@ -47,7 +47,7 @@ export const App = (): JSX.Element => {
         <p>
           初期投資
           <input
-            type="number"
+            type="text"
             name="initialInvestment"
             value={initialInvestment}
             onChange={handleInitialInvestment}
@@ -57,7 +57,7 @@ export const App = (): JSX.Element => {
         <p>
           毎月
           <input
-            type="number"
+            type="text"
             name="monthlyInvestment"
             value={monthlyInvestment}
             onChange={handleMonthlyInvestment}
@@ -67,7 +67,7 @@ export const App = (): JSX.Element => {
         <p>
           年利
           <input
-            type="number"
+            type="text"
             name="yields"
             value={yields}
             onChange={handleYields}
@@ -76,7 +76,7 @@ export const App = (): JSX.Element => {
         </p>
         <p>
           <input
-            type="number"
+            type="text"
             name="years"
             value={years}
             onChange={handleYears}
