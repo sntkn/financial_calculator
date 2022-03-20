@@ -1,5 +1,16 @@
-import { useEffect, useState } from 'react'
-export const App = (): JSX.Element => {
+import { useEffect, useState, VFC } from 'react'
+import {
+  Box,
+  Input,
+  InputGroup,
+  Text,
+  InputRightElement,
+  Center,
+  Divider,
+  Heading,
+} from '@chakra-ui/react'
+
+export const App: VFC = () => {
   const [initialInvestment, setInitialInvestment] = useState<string>('')
   const handleInitialInvestment = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInitialInvestment(e.target.value)
@@ -40,55 +51,97 @@ export const App = (): JSX.Element => {
   }, [initialInvestment, monthlyInvestment, years, yields])
 
   const totalExcludedTax = () => totalAssets - profit + profit * 0.8
+  const ProfitAndLossText: VFC = () => {
+    return profit > 0 ? (
+      <Text as="span" color="green" fontSize="lg">
+        +{profit.toLocaleString()}
+      </Text>
+    ) : (
+      <Text as="span" color="red" fontSize="lg">
+        {profit.toLocaleString()}
+      </Text>
+    )
+  }
+  const NumberText: VFC<{ num: number }> = ({ num }) => (
+    <Text as="span" fontSize="lg" mx=".5em">
+      {num.toLocaleString()}
+    </Text>
+  )
 
   return (
-    <div>
-      <div>
-        <p>
-          初期投資
-          <input
-            type="text"
-            name="initialInvestment"
-            value={initialInvestment}
-            onChange={handleInitialInvestment}
-          />
-          万円で
-        </p>
-        <p>
-          毎月
-          <input
-            type="text"
-            name="monthlyInvestment"
-            value={monthlyInvestment}
-            onChange={handleMonthlyInvestment}
-          />
-          万円を積み立て、
-        </p>
-        <p>
-          年利
-          <input
-            type="text"
-            name="yields"
-            value={yields}
-            onChange={handleYields}
-          />
-          % で運用すると、
-        </p>
-        <p>
-          <input
-            type="text"
-            name="years"
-            value={years}
-            onChange={handleYears}
-          />
-          年後に {totalAssets.toLocaleString()}
-          円になります。
-          <br />
-          損益 {profit.toLocaleString()} 円で、 税引き後{' '}
-          {Math.floor(totalExcludedTax()).toLocaleString()} 円になります。
-          積立金額は{totalReserves.toLocaleString()}円です。
-        </p>
-      </div>
-    </div>
+    <Center>
+      <Box w="30%" borderWidth="1px" borderRadius="lg" overflow="hidden">
+        <Heading bgColor="gray.100" textAlign="center" p=".5em" fontSize="2em">
+          金融電卓
+        </Heading>
+        <Box p="1em">
+          <Box mt="1em">
+            <Text mb="8px">初期投資</Text>
+            <InputGroup>
+              <Input
+                textAlign="right"
+                name="initialInvestment"
+                value={initialInvestment}
+                onChange={handleInitialInvestment}
+              />
+              <InputRightElement>万円</InputRightElement>
+            </InputGroup>
+          </Box>
+          <Box mt="1em">
+            <Text mb="8px">毎月の積み立て</Text>
+            <InputGroup>
+              <Input
+                textAlign="right"
+                name="monthlyInvestment"
+                value={monthlyInvestment}
+                onChange={handleMonthlyInvestment}
+              />
+              <InputRightElement>万円</InputRightElement>
+            </InputGroup>
+          </Box>
+          <Box mt="1em">
+            <Text mb="8px">年利</Text>
+            <InputGroup>
+              <Input
+                textAlign="right"
+                name="yields"
+                value={yields}
+                onChange={handleYields}
+              />
+              <InputRightElement>％</InputRightElement>
+            </InputGroup>
+          </Box>
+          <Box mt="1em">
+            <Text mb="8px">運用年数</Text>
+            <InputGroup>
+              <Input
+                textAlign="right"
+                name="years"
+                value={years}
+                onChange={handleYears}
+              />
+              <InputRightElement>年</InputRightElement>
+            </InputGroup>
+          </Box>
+          <Divider orientation="horizontal" my="2em" />
+          <Text>{Number(years)} 年後</Text>
+          <Text>
+            総資産額
+            <NumberText num={totalAssets} />
+            円 (
+            <ProfitAndLossText />) 円)
+          </Text>
+          <Text>
+            税引き後
+            <NumberText num={Math.floor(totalExcludedTax())} />
+            円<br />
+          </Text>
+          <Text>
+            積立
+            <NumberText num={totalReserves} />円
+          </Text>
+        </Box>
+      </Box>
+    </Center>
   )
 }
