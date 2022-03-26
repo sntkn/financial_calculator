@@ -40,14 +40,16 @@ export const App: VFC = () => {
   const [yearlyResult, setYearlyResult] = useState<number[][]>([])
 
   useEffect(() => {
-    const yearlyInvestment = Number(monthlyInvestment) * 12
     let total = Number(initialInvestment)
     let reserve = Number(initialInvestment)
+    const monthlyYields = Number(yields) / 12
     const results = []
     for (let index = 0; index < Number(years); index++) {
-      reserve += yearlyInvestment
-      total += yearlyInvestment
-      total *= Number(yields) / 100 + 1
+      for (let month = 0; month < 12; month++) {
+        reserve += Number(monthlyInvestment)
+        total += Number(monthlyInvestment)
+        total *= Number(monthlyYields) / 100 + 1
+      }
       results.push([reserve * 10000, total * 10000, (total - reserve) * 10000])
     }
     const realTotalAssets = Math.floor(total * 10000)
